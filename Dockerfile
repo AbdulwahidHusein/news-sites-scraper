@@ -26,6 +26,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY . .
 
+# Make startup script executable
+RUN chmod +x start.sh
+
 # Create non-root user for security
 RUN useradd --create-home --shell /bin/bash appuser && \
     chown -R appuser:appuser /app
@@ -34,9 +37,8 @@ USER appuser
 # Expose port
 EXPOSE 8080
 
-# Health check
+# Health check - use PORT environment variable
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
 
-# Default command
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8080"] 
+CMD ["./start.sh"] 
