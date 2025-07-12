@@ -32,11 +32,11 @@ RUN useradd --create-home --shell /bin/bash appuser && \
 USER appuser
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8080
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Default command
-CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"] 
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8080"] 
